@@ -68,6 +68,18 @@ static unsigned int blinktimeout = 800;
 static unsigned int cursorthickness = 2;
 
 /*
+ * 1: render most of the lines/blocks characters without using the font for
+ *    perfect alignment between cells (U2500 - U259F except dashes/diagonals).
+ *    Bold affects lines thickness if boxdraw_bold is not 0. Italic is ignored.
+ * 0: disable (render all U25XX glyphs normally from the font).
+ */
+int boxdraw = 0;
+int boxdraw_bold = 0;
+
+/* braille (U28XX):  1: render as adjacent "pixels",  0: use font */
+int boxdraw_braille = 0;
+
+/*
  * bell volume. It must be a value between -100 and 100. Use 0 for disabling
  * it
  */
@@ -177,38 +189,41 @@ static uint forcemousemod = ShiftMask;
  * Xresources preferences to load at startup
  */
 ResourcePref resources[] = {
-	{ "font",               STRING,  &font           },
-	{ "borderpx",           INTEGER, &borderpx       },
-	{ "shell",              STRING,  &shell          },
-	{ "cwscale",            FLOAT,   &cwscale        },
-	{ "chscale",            FLOAT,   &chscale        },
-	{ "minlatency",         INTEGER, &minlatency     },
-	{ "maxlatency",         INTEGER, &maxlatency     },
-	{ "blinktimeout",       INTEGER, &blinktimeout   },
-	{ "bellvolume",         INTEGER, &bellvolume     },
-	{ "termname",           STRING,  &termname       },
-	{ "tabspaces",          INTEGER, &tabspaces      },
-	{ "alpha",              FLOAT,   &alpha          },
-	{ "col_00",             STRING,  &colorname[0]   },
-	{ "col_01",             STRING,  &colorname[1]   },
-	{ "col_02",             STRING,  &colorname[2]   },
-	{ "col_03",             STRING,  &colorname[3]   },
-	{ "col_04",             STRING,  &colorname[4]   },
-	{ "col_05",             STRING,  &colorname[5]   },
-	{ "col_06",             STRING,  &colorname[6]   },
-	{ "col_07",             STRING,  &colorname[7]   },
-	{ "col_08",             STRING,  &colorname[8]   },
-	{ "col_09",             STRING,  &colorname[9]   },
-	{ "col_10",             STRING,  &colorname[10]  },
-	{ "col_11",             STRING,  &colorname[11]  },
-	{ "col_12",             STRING,  &colorname[12]  },
-	{ "col_13",             STRING,  &colorname[13]  },
-	{ "col_14",             STRING,  &colorname[14]  },
-	{ "col_15",             STRING,  &colorname[15]  },
-	{ "col_foreground",     STRING,  &colorname[258] },
-	{ "col_background",     STRING,  &colorname[259] },
-	{ "col_cursor_regular", STRING,  &colorname[256] },
-	{ "col_cursor_reverse", STRING,  &colorname[257] },
+	{ "font",               STRING,  &font            },
+	{ "borderpx",           INTEGER, &borderpx        },
+	{ "shell",              STRING,  &shell           },
+	{ "cwscale",            FLOAT,   &cwscale         },
+	{ "chscale",            FLOAT,   &chscale         },
+	{ "minlatency",         INTEGER, &minlatency      },
+	{ "maxlatency",         INTEGER, &maxlatency      },
+	{ "blinktimeout",       INTEGER, &blinktimeout    },
+	{ "boxdraw",            INTEGER, &boxdraw         },
+	{ "boxdraw_bold",       INTEGER, &boxdraw_bold    },
+	{ "boxdraw_braille",    INTEGER, &boxdraw_braille },
+	{ "bellvolume",         INTEGER, &bellvolume      },
+	{ "termname",           STRING,  &termname        },
+	{ "tabspaces",          INTEGER, &tabspaces       },
+	{ "alpha",              FLOAT,   &alpha           },
+	{ "col_00",             STRING,  &colorname[0]    },
+	{ "col_01",             STRING,  &colorname[1]    },
+	{ "col_02",             STRING,  &colorname[2]    },
+	{ "col_03",             STRING,  &colorname[3]    },
+	{ "col_04",             STRING,  &colorname[4]    },
+	{ "col_05",             STRING,  &colorname[5]    },
+	{ "col_06",             STRING,  &colorname[6]    },
+	{ "col_07",             STRING,  &colorname[7]    },
+	{ "col_08",             STRING,  &colorname[8]    },
+	{ "col_09",             STRING,  &colorname[9]    },
+	{ "col_10",             STRING,  &colorname[10]   },
+	{ "col_11",             STRING,  &colorname[11]   },
+	{ "col_12",             STRING,  &colorname[12]   },
+	{ "col_13",             STRING,  &colorname[13]   },
+	{ "col_14",             STRING,  &colorname[14]   },
+	{ "col_15",             STRING,  &colorname[15]   },
+	{ "col_foreground",     STRING,  &colorname[258]  },
+	{ "col_background",     STRING,  &colorname[259]  },
+	{ "col_cursor_regular", STRING,  &colorname[256]  },
+	{ "col_cursor_reverse", STRING,  &colorname[257]  },
 };
 
 /*

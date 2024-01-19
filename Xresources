@@ -6,6 +6,9 @@ st.chscale: 1.0
 st.minlatency: 8
 st.maxlatency: 33
 st.blinktimeout: 800
+st.boxdraw: 0
+st.boxdraw_bold: 0
+st.boxdraw_braille: 0
 st.bellvolume: 0
 st.termname: st-256color
 st.tabspaces: 8
