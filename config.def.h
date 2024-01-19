@@ -188,6 +188,7 @@ ResourcePref resources[] = {
 	{ "bellvolume",         INTEGER, &bellvolume     },
 	{ "termname",           STRING,  &termname       },
 	{ "tabspaces",          INTEGER, &tabspaces      },
+	{ "alpha",              FLOAT,   &alpha          },
 	{ "col_00",             STRING,  &colorname[0]   },
 	{ "col_01",             STRING,  &colorname[1]   },
 	{ "col_02",             STRING,  &colorname[2]   },
